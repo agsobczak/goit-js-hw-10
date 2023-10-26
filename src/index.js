@@ -1,12 +1,21 @@
 import { debounce } from 'lodash';
 import { loadCountries, handleResults } from './fetchCountries';
 import { Notiflix } from 'notiflix';
+
 const searchBox = document.getElementById('search-box');
 const resultsContainer = document.querySelector('.results');
-const debouncedSearch = debounce(name => loadCountries(name), 300, {
-  leading: true,
-  trailing: false,
-});
+
+const debouncedSearch = debounce(
+  name => {
+    loadCountries(name, results => handleResults(results));
+  },
+  300,
+  {
+    leading: false,
+    trailing: true,
+  }
+);
+
 searchBox.addEventListener('input', event => {
   const name = event.target.value.trim();
   debouncedSearch(name);
