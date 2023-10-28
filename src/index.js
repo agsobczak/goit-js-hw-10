@@ -1,18 +1,19 @@
+let name;
 import { debounce } from 'lodash';
-import { loadCountries, handleResults } from './fetchCountries';
-import { Notiflix } from 'notiflix';
+import { loadCountries } from './fetchCountries';
+import Notiflix from 'notiflix';
 
 const searchBox = document.getElementById('search-box');
 const resultsContainer = document.querySelector('.results');
 
 const debouncedSearch = debounce(
   name => {
-    loadCountries(name, results => handleResults(results));
+    loadCountries(name);
   },
   300,
   {
-    leading: false,
-    trailing: true,
+    leading: true,
+    trailing: false,
   }
 );
 
@@ -20,12 +21,13 @@ searchBox.addEventListener('input', event => {
   const name = event.target.value.trim();
   debouncedSearch(name);
 });
-function handleResults(results) {
+
+async function handleResults(name) {
+  const results = await loadCountries(name);
   if (results.length > 10) {
-    Notiflix.notify({
-      title: 'Too many matches',
-      message: 'Please enter a more specific name',
-    });
+    Notiflix.Notify.warning(
+      'Too many matches found. Please enter a more specific name.'
+    );
   } else if (results.length === 1) {
     handleSingleCountryResult(results[0]);
   } else if (results.length > 0) {
@@ -34,6 +36,9 @@ function handleResults(results) {
     handleNoResults();
   }
 }
+
+handleResults(name);
+
 function handleSingleCountryResult(country) {
   resultsContainer.innerHTML = `
 <div class="card">
@@ -45,6 +50,7 @@ function handleSingleCountryResult(country) {
 </div>
 `;
 }
+
 function handleMultipleCountryResults(results) {
   resultsContainer.innerHTML = results
     .map(
@@ -57,7 +63,9 @@ function handleMultipleCountryResults(results) {
     )
     .join('');
 }
+
 function handleNoResults() {
   resultsContainer.innerHTML = '';
 }
+
 loadCountries('');
