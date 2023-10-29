@@ -1,4 +1,3 @@
-let name;
 import { debounce } from 'lodash';
 import { loadCountries } from './fetchCountries';
 import Notiflix from 'notiflix';
@@ -8,7 +7,7 @@ const resultsContainer = document.querySelector('.results');
 
 const debouncedSearch = debounce(
   name => {
-    loadCountries(name);
+    handleResults(name);
   },
   300,
   {
