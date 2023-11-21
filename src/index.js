@@ -22,6 +22,10 @@ searchBox.addEventListener('input', event => {
 });
 
 async function handleResults(name) {
+  resultsContainer.innerHTML = '';
+  if (name === '') {
+    return;
+  }
   const results = await loadCountries(name);
   if (results.length > 10) {
     Notiflix.Notify.warning(
@@ -36,16 +40,15 @@ async function handleResults(name) {
   }
 }
 
-handleResults(name);
-
 function handleSingleCountryResult(country) {
+  const language = Object.values(country.languages)[0];
   resultsContainer.innerHTML = `
 <div class="card">
 <img src="${country.flags.png}" alt="${country.altSpellings[1]} flag" />
 <h2>${country.altSpellings[1]}</h2>
   <p>Capital: ${country.capital}</p>
   <p>Population: ${country.population}</p>
-  <p>Languages: ${country.languages}</p>
+  <p>Languages: ${language}</p>
 </div>
 `;
 }
@@ -55,8 +58,8 @@ function handleMultipleCountryResults(results) {
     .map(
       country => `
 <div class="result">
-  <img src="${country.flag}" alt="${country.name}" />
-  <h2>${country.name}</h2>
+  <img src="${country.flags.svg}" alt="${country.name.official}" />
+  <h2>${country.name.official}</h2>
 </div>
 `
     )
@@ -66,5 +69,3 @@ function handleMultipleCountryResults(results) {
 function handleNoResults() {
   resultsContainer.innerHTML = '';
 }
-
-loadCountries('');

@@ -521,36 +521,37 @@ searchBox.addEventListener("input", (event)=>{
     debouncedSearch(name);
 });
 async function handleResults(name) {
+    resultsContainer.innerHTML = "";
+    if (name === "") return;
     const results = await (0, _fetchCountries.loadCountries)(name);
     if (results.length > 10) (0, _notiflixDefault.default).Notify.warning("Too many matches found. Please enter a more specific name.");
     else if (results.length === 1) handleSingleCountryResult(results[0]);
     else if (results.length > 0) handleMultipleCountryResults(results);
     else handleNoResults();
 }
-handleResults(name);
 function handleSingleCountryResult(country) {
+    const language = Object.values(country.languages)[0];
     resultsContainer.innerHTML = `
 <div class="card">
 <img src="${country.flags.png}" alt="${country.altSpellings[1]} flag" />
 <h2>${country.altSpellings[1]}</h2>
   <p>Capital: ${country.capital}</p>
   <p>Population: ${country.population}</p>
-  <p>Languages: ${country.languages}</p>
+  <p>Languages: ${language}</p>
 </div>
 `;
 }
 function handleMultipleCountryResults(results) {
     resultsContainer.innerHTML = results.map((country)=>`
 <div class="result">
-  <img src="${country.flag}" alt="${country.name}" />
-  <h2>${country.name}</h2>
+  <img src="${country.flags.svg}" alt="${country.name.official}" />
+  <h2>${country.name.official}</h2>
 </div>
 `).join("");
 }
 function handleNoResults() {
     resultsContainer.innerHTML = "";
 }
-(0, _fetchCountries.loadCountries)("");
 
 },{"lodash":"3qBDj","./fetchCountries":"fTQqv","notiflix":"5z0Oc","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"3qBDj":[function(require,module,exports) {
 var global = arguments[3];
@@ -14786,14 +14787,10 @@ var global = arguments[3];
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "loadCountries", ()=>loadCountries);
-parcelHelpers.export(exports, "handleResults", ()=>handleResults);
 async function loadCountries(name) {
     const response = await fetch(`https://restcountries.com/v3.1/name/${name}`);
     const countries = await response.json();
     return countries;
-}
-function handleResults(results) {
-// ...
 }
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gkKU3":[function(require,module,exports) {

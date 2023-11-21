@@ -3,7 +3,3 @@ export async function loadCountries(name) {
   const countries = await response.json();
   return countries;
 }
-
-export function handleResults(results) {
-  // ...
-}
