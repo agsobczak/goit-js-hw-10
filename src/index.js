@@ -41,8 +41,8 @@ handleResults(name);
 function handleSingleCountryResult(country) {
   resultsContainer.innerHTML = `
 <div class="card">
-  <img src="${country.flag}" alt="${country.name}" />
-  <h2>${country.name}</h2>
+<img src="${country.flags.png}" alt="${country.altSpellings[1]} flag" />
+<h2>${country.altSpellings[1]}</h2>
   <p>Capital: ${country.capital}</p>
   <p>Population: ${country.population}</p>
   <p>Languages: ${country.languages}</p>
